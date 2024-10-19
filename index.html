@@ -12,21 +12,17 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             height: 100vh;
-            overflow: hidden; /* لإخفاء التمرير */
         }
         .container {
             text-align: center;
-            width: 90%; /* العرض مع ترك مسافة من الطرفين */
-            transition: transform 0.5s ease;
+            width: 90%;
         }
         h1 {
             font-size: 60px;
             letter-spacing: 5px;
-            position: relative;
-            top: -50px;
             margin: 0;
         }
         .colored-text {
@@ -42,45 +38,41 @@
             color: #ffff57; /* أصفر */
         }
         .search-container {
-            margin-top: 50px;
-            position: relative;
+            margin-top: 20px;
         }
         .search-bar {
-            width: calc(100% - 5px); /* عرض مع ترك مسافة من الجانبين */
+            width: calc(100% - 5px);
             padding: 12px;
             font-size: 20px;
             border-radius: 30px;
             border: none;
             background-color: #333;
             color: white;
-            outline: none;
             text-align: center;
             box-sizing: border-box;
         }
         .search-bar::placeholder {
             color: #aaa;
         }
-        .moved-up {
-            transform: translateY(-53vh); /* لنقل مربع النص إلى أعلى */
+        iframe {
+            margin-top: 20px;
+            width: 100%;
+            height: 70vh;
+            border: none;
         }
     </style>
 </head>
 <body>
-    <div class="container" id="container">
+    <div class="container">
         <h1><span class="colored-text">O</span><span class="colored-text">m</span><span class="colored-text">a</span><span class="colored-text">r</span></h1>
         <div class="search-container">
-            <input type="text" id="search" class="search-bar" placeholder="البحث أو إدخال عنوان URL" onfocus="moveSearchToTop()">
+            <input type="text" id="search" class="search-bar" placeholder="البحث أو إدخال عنوان URL" onkeydown="performSearch(event)">
         </div>
+        <iframe id="searchResults" src="https://www.google.com" title="نتائج البحث"></iframe>
     </div>
 
     <script>
-        // نقل مربع البحث إلى أعلى الشاشة عند الضغط عليه
-        function moveSearchToTop() {
-            document.getElementById('container').classList.add('moved-up');
-        }
-
-        // تنفيذ البحث أو الانتقال إلى الموقع عند الضغط على Enter
-        document.getElementById('search').addEventListener('keydown', function(e) {
+        function performSearch(e) {
             if (e.key === 'Enter') {
                 let query = e.target.value.trim();
                 if (query) {
@@ -90,10 +82,10 @@
                     } else if (!query.startsWith('http://') && !query.startsWith('https://')) {
                         query = 'https://' + query;
                     }
-                    window.open(query, '_blank'); // فتح الموقع أو نتائج البحث في صفحة جديدة
+                    document.getElementById('searchResults').src = query; // تحديث إطار النتائج
                 }
             }
-        });
+        }
     </script>
 </body>
 </html>
