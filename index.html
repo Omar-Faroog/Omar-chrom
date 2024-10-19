@@ -3,46 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متصفح عمر</title>
+    <title>Omar Browser</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #121212;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* لإخفاء التمرير */
+        }
+        .container {
             text-align: center;
-            padding: 50px;
+            width: 90%; /* العرض مع ترك مسافة من الطرفين */
+            transition: transform 0.5s ease;
         }
         h1 {
-            color: #333;
+            font-size: 60px;
+            letter-spacing: 5px;
+            position: relative;
+            top: -50px;
+            margin: 0;
         }
-        input[type="text"] {
-            width: 70%;
-            padding: 10px;
-            font-size: 16px;
+        .colored-text {
+            color: #ff5757; /* أحمر */
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
+        .colored-text:nth-child(2) {
+            color: #57ff57; /* أخضر */
+        }
+        .colored-text:nth-child(3) {
+            color: #5757ff; /* أزرق */
+        }
+        .colored-text:nth-child(4) {
+            color: #ffff57; /* أصفر */
+        }
+        .search-container {
+            margin-top: 50px;
+            position: relative;
+        }
+        .search-bar {
+            width: calc(100% - 5px); /* عرض مع ترك مسافة من الجانبين */
+            padding: 12px;
+            font-size: 20px;
+            border-radius: 30px;
+            border: none;
             background-color: #333;
             color: white;
-            border: none;
-            margin-left: 10px;
+            outline: none;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .search-bar::placeholder {
+            color: #aaa;
+        }
+        .moved-up {
+            transform: translateY(-53vh); /* لنقل مربع النص إلى أعلى */
         }
     </style>
 </head>
 <body>
-    <h1>مرحبًا بك في متصفح عمر</h1>
-    <input type="text" id="search" placeholder="أدخل رابط الموقع">
-    <button onclick="openWebsite()">اذهب</button>
+    <div class="container" id="container">
+        <h1><span class="colored-text">O</span><span class="colored-text">m</span><span class="colored-text">a</span><span class="colored-text">r</span></h1>
+        <div class="search-container">
+            <input type="text" id="search" class="search-bar" placeholder="البحث أو إدخال عنوان URL" onfocus="moveSearchToTop()">
+        </div>
+    </div>
 
     <script>
-        function openWebsite() {
-            var url = document.getElementById( search ).value;
-            if (!url.startsWith( http:// ) && !url.startsWith( https:// )) {
-                url =  http://  + url;
-            }
-            window.open(url,  _blank );
+        // نقل مربع البحث إلى أعلى الشاشة عند الضغط عليه
+        function moveSearchToTop() {
+            document.getElementById('container').classList.add('moved-up');
         }
+
+        // تنفيذ البحث أو الانتقال إلى الموقع عند الضغط على Enter
+        document.getElementById('search').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                let query = e.target.value.trim();
+                if (query) {
+                    // البحث باستخدام جوجل إذا كان النص ليس URL
+                    if (!query.startsWith('http://') && !query.startsWith('https://') && !query.includes('.')) {
+                        query = 'https://www.google.com/search?q=' + encodeURIComponent(query);
+                    } else if (!query.startsWith('http://') && !query.startsWith('https://')) {
+                        query = 'https://' + query;
+                    }
+                    window.open(query, '_blank'); // فتح الموقع أو نتائج البحث في صفحة جديدة
+                }
+            }
+        });
     </script>
 </body>
 </html>
