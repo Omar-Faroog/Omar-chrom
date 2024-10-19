@@ -84,7 +84,7 @@
             if (e.key === 'Enter') {
                 let query = e.target.value.trim();
                 if (query) {
-                    // البحث باستخدام جوجل إذا كان النص ليس URL
+                    // البحث باستخدام جوجل إذا كان النص سؤالاً أو استعلامًا وليس URL
                     if (!query.startsWith('http://') && !query.startsWith('https://') && !query.includes('.')) {
                         query = 'https://www.google.com/search?q=' + encodeURIComponent(query);
                     } else if (!query.startsWith('http://') && !query.startsWith('https://')) {
