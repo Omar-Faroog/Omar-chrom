@@ -39,9 +39,11 @@
         }
         .search-container {
             margin-top: 20px;
+            position: relative;
+            width: 100%;
         }
         .search-bar {
-            width: calc(100% - 5px);
+            width: 100%;
             padding: 12px;
             font-size: 20px;
             border-radius: 30px;
@@ -54,11 +56,22 @@
         .search-bar::placeholder {
             color: #aaa;
         }
-        iframe {
-            margin-top: 20px;
+        #searchResults {
+            display: none;
             width: 100%;
-            height: 70vh;
+            height: calc(100vh - 120px); /* تخصيص الارتفاع لتتناسب مع الحاوية */
             border: none;
+            margin-top: 20px;
+        }
+        /* شريط التحميل */
+        #loading-bar {
+            height: 4px;
+            width: 0;
+            background-color: #00aaff;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s ease;
         }
     </style>
 </head>
@@ -67,22 +80,40 @@
         <h1><span class="colored-text">O</span><span class="colored-text">m</span><span class="colored-text">a</span><span class="colored-text">r</span></h1>
         <div class="search-container">
             <input type="text" id="search" class="search-bar" placeholder="البحث أو إدخال عنوان URL" onkeydown="performSearch(event)">
+            <div id="loading-bar"></div> <!-- شريط التحميل -->
         </div>
-        <iframe id="searchResults" src="https://www.google.com" title="نتائج البحث"></iframe>
+        <iframe id="searchResults"></iframe> <!-- إطار النتائج -->
     </div>
 
     <script>
+        // وظيفة تنفيذ البحث أو الانتقال إلى الموقع عند الضغط على Enter
         function performSearch(e) {
             if (e.key === 'Enter') {
                 let query = e.target.value.trim();
+                let iframe = document.getElementById('searchResults');
+                let loadingBar = document.getElementById('loading-bar');
+                
                 if (query) {
-                    // البحث باستخدام جوجل إذا كان النص سؤالاً أو استعلامًا وليس URL
+                    // إظهار شريط التحميل
+                    loadingBar.style.width = '0';
+                    loadingBar.style.transition = 'width 0.3s ease';
+                    loadingBar.style.width = '100%';
+
+                    // معالجة النص: البحث باستخدام جوجل إذا كان استعلامًا وليس URL
                     if (!query.startsWith('http://') && !query.startsWith('https://') && !query.includes('.')) {
                         query = 'https://www.google.com/search?q=' + encodeURIComponent(query);
                     } else if (!query.startsWith('http://') && !query.startsWith('https://')) {
                         query = 'https://' + query;
                     }
-                    document.getElementById('searchResults').src = query; // تحديث إطار النتائج
+
+                    // عرض iframe وتحديث مصدره
+                    iframe.style.display = 'block';
+                    iframe.src = query;
+
+                    // إعادة ضبط شريط التحميل عند اكتمال تحميل الصفحة
+                    iframe.onload = function() {
+                        loadingBar.style.width = '0'; // إخفاء شريط التحميل بعد اكتمال التحميل
+                    };
                 }
             }
         }
